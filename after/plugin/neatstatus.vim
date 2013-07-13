@@ -163,30 +163,9 @@ if has('statusline')
     "
     function! SetStatusLineStyle()
 
-        " Determine the name of the session or terminal
-        if (strlen(v:servername)>0)
-            " If running a GUI vim with servername, then use that
-            let g:neatstatus_session = v:servername
-        elseif !has('gui_running')
-            " If running CLI vim say TMUX or use the terminal name.
-            if (exists("$TMUX"))
-                let g:neatstatus_session = 'tmux'
-            else
-                " Giving preference to color-term because that might be more
-                " meaningful in graphical environments. Eg. my $TERM is
-                " usually screen256-color 90% of the time.
-                let g:neatstatus_session = exists("$COLORTERM") ? $COLORTERM : $TERM
-            endif
-        else
-            " idk, my bff jill
-            let g:neatstatus_session = '?'
-        endif
-        
         let &stl=""
         " mode (changes color)
         let &stl.="%1*\ %{Mode()} %0*".g:NeatStatusLine_separator 
-        " session name
-        let &stl.="%5* %{g:neatstatus_session} %0*".g:NeatStatusLine_separator
         " file path
         let &stl.=" %<%F "
         " read only, modified, modifiable flags in brackets
@@ -204,12 +183,8 @@ if has('statusline')
         let &stl.="%{&fileformat} ".g:NeatStatusLine_separator." "
         " file encoding (eg. utf8, latin1, etc..)
         let &stl.="%(%{(&fenc!=''?&fenc:&enc)} ".g:NeatStatusLine_separator." %)"
-        " buffer number
-        let &stl.="BUF #%n ".g:NeatStatusLine_separator 
         "line number (pink) / total lines
         let &stl.="%5* LN %7*%l%5*/%L\ %0*".g:NeatStatusLine_separator." "
-        " percentage done
-        let &stl.="(%p%%) ".g:NeatStatusLine_separator." "
         " column number
         let &stl.="COL %c%V ".g:NeatStatusLine_separator
         " modified / unmodified (purple)
